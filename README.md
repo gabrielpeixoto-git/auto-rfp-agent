@@ -253,3 +253,14 @@ docker-compose -f docker-compose.yml up -d
 ## License
 
 MIT
+
+# Fotos
+
+<img width="1919" height="949" alt="Captura de tela 2026-05-02 162003" src="https://github.com/user-attachments/assets/214ed2c1-1a41-4639-93de-45434b6c5da0" />
+<img width="1919" height="946" alt="Captura de tela 2026-05-05 181049" src="https://github.com/user-attachments/assets/9b617cbf-7058-4194-ac77-32540ed815c8" />
+<img width="1919" height="948" alt="Captura de tela 2026-05-05 181035" src="https://github.com/user-attachments/assets/3824091c-7b15-411f-851e-a00034854db1" />
+<img width="1919" height="952" alt="Captura de tela 2026-05-05 181023" src="https://github.com/user-attachments/assets/fe3373e9-89eb-4b70-a63d-96b54793b351" />
+<img width="1912" height="946" alt="Captura de tela 2026-05-05 180953" src="https://github.com/user-attachments/assets/bd3a512b-bff4-4d68-97e8-11f837ce3b77" />
+<img width="1919" height="949" alt="Captura de tela 2026-05-02 162251" src="https://github.com/user-attachments/assets/7e601936-4349-4359-8248-a408b5e6bb61" />
+<img width="1918" height="945" alt="Captura de tela 2026-05-02 162044" src="https://github.com/user-attachments/assets/a7bec568-b0cc-482a-994d-faff1424f40c" />
+<img width="1915" height="947" alt="Captura de tela 2026-05-02 162027" src="https://github.com/user-attachments/assets/58df2ac3-21dd-44fb-85aa-49d054eb5265" />
