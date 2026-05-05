@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: auto-rfp-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-autorfppguser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-autorfppgpass}
+      POSTGRES_DB: ${POSTGRES_DB:-autorfpdb}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-autorfppguser} -d ${POSTGRES_DB:-autorfpdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: auto-rfp-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./app/api
+      dockerfile: Dockerfile
+    container_name: auto-rfp-api
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-autorfppguser}:${POSTGRES_PASSWORD:-autorfppgpass}@postgres:5432/${POSTGRES_DB:-autorfpdb}
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+  celery-worker:
+    build:
+      context: ./app/api
+      dockerfile: Dockerfile
+    container_name: auto-rfp-celery-worker
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-autorfppguser}:${POSTGRES_PASSWORD:-autorfppgpass}@postgres:5432/${POSTGRES_DB:-autorfpdb}
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./app/api:/app
+      - ./uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A src.workers.celery_app worker --loglevel=info --concurrency=2
+
+  celery-beat:
+    build:
+      context: ./app/api
+      dockerfile: Dockerfile
+    container_name: auto-rfp-celery-beat
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-autorfppguser}:${POSTGRES_PASSWORD:-autorfppgpass}@postgres:5432/${POSTGRES_DB:-autorfpdb}
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./app/api:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A src.workers.celery_app beat --loglevel=info
+
+  flower:
+    build:
+      context: ./app/api
+      dockerfile: Dockerfile
+    container_name: auto-rfp-flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "${FLOWER_PORT:-5555}:5555"
+    depends_on:
+      - redis
+      - celery-worker
+    command: celery -A src.workers.celery_app flower --port=5555
+
+  web:
+    build:
+      context: ./app/web
+      dockerfile: Dockerfile.dev
+    container_name: auto-rfp-web
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:8000/api/v1
+      - HOSTNAME=0.0.0.0
+      - PORT=3000
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      - ./app/web/app:/app/app
+      - ./app/web/components:/app/components
+      - ./app/web/lib:/app/lib
+      - ./app/web/contexts:/app/contexts
+      - ./app/web/hooks:/app/hooks
+      - ./app/web/types:/app/types
+      - ./app/web/next.config.js:/app/next.config.js:ro
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,252 @@
+# ============================================================
+# AUTO-RFP AGENT - GITIGNORE COMPLETO
+# Python + Node.js/Next.js
+# ============================================================
+
+# ============================================================
+# AMBIENTE PYTHON
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# ============================================================
+# VARIÁVEIS DE AMBIENTE E SECRETS - NUNCA SUBIR
+# ============================================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+*.pem
+*.key
+*.crt
+secrets.json
+secrets.yaml
+secrets.yml
+config.local.json
+*.secret
+token.txt
+jwt.txt
+
+# ============================================================
+# BANCO DE DADOS LOCAL
+# ============================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db3
+*.s3db
+*.sl3
+celerybeat-schedule
+celerybeat-schedule.db
+dump.rdb
+
+# ============================================================
+# LOGS E CACHE
+# ============================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.cache/
+*.cache
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# ============================================================
+# NODE / NEXT.JS
+# ============================================================
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+!.next-env.d.ts
+.vercel
+.npm
+.yarn
+.pnp.*
+.yarnrc.yml
+
+# ============================================================
+# OLLAMA / MODELOS DE IA LOCAIS
+# ============================================================
+models/
+*.gguf
+*.bin
+*.safetensors
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.mlmodel
+
+# ============================================================
+# SISTEMA OPERACIONAL
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+*.lnk
+*.stackdump
+
+# ============================================================
+# IDEs E EDITORES
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vs/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.tmproj
+*.esproj
+
+# ============================================================
+# UPLOADS E ARQUIVOS TEMPORÁRIOS
+# ============================================================
+uploads/*
+!uploads/.gitkeep
+temp/
+tmp/
+tmp.*
+*.tmp
+*.bak
+*.backup
+*.orig
+*.old
+*.rej
+
+# ============================================================
+# ARQUIVOS DE TESTE E DEBUG
+# ============================================================
+test_*.txt
+test_*.pdf
+test_*.docx
+test_*.json
+teste_*
+real_test.txt
+test_fallback.txt
+debug_*.log
+diagnose_*.log
+
+# ============================================================
+# ARQUIVOS DE DOCUMENTAÇÃO TEMPORÁRIA
+# ============================================================
+CORRECAO_*.md
+RESUMO_*.md
+SECURITY_*.md
+UPLOAD_FIX_*.md
+XSS_*.md
+progress*.md
+*.md.bak
+
+# ============================================================
+# SCRIPTS DE DEBUG E UTILITÁRIOS TEMPORÁRIOS
+# ============================================================
+# Scripts de teste e debug (mantidos apenas se necessário)
+# Comentar as linhas abaixo se quiser versionar alguns testes
+capture_*.py
+capture_*.ps1
+debug_*.py
+diagnose_*.py
+diagnostico_*.py
+investigate_*.py
+simulate_*.py
+test_*.py
+!app/api/src/tests/
+test_*.bat
+test_*.ps1
+upload_*.bat
+upload_*.ps1
+upload_*.py
+trigger_*.py
+validate_*.py
+verify_*.py
+simple_validate.py
+check_*.py
+check_*.sql
+fix_*.py
+fix_*.ps1
+fix_*.sql
+rebuild-*.ps1
+run_*.bat
+start-*.bat
+start-*.ps1
+runtime_*.py
+analyze_*.py
+project_id.txt
+
+# ============================================================
+# WINDSURF / CURSOR / OUTROS
+# ============================================================
+.windsurfrc
+.cursor/
+*.code-workspace
+
+# ============================================================
+# DOCKER (opcional - descomente se necessário)
+# ============================================================
+# .dockerignore
+# Dockerfile.*.local
+
+# ============================================================
+# KUBERNETES / HELM (opcional)
+# ============================================================
+*.tgz
+chart.lock
+

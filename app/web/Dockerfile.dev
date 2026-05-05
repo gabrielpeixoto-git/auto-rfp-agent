@@ -1,0 +1,26 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instalar dependências primeiro (melhor cache)
+COPY package*.json ./
+RUN npm install
+
+# Copiar configurações necessárias
+COPY next.config.js ./
+COPY tailwind.config.ts ./
+COPY postcss.config.js ./
+COPY tsconfig.json ./
+
+# NÃO copiar o código-fonte inteiro nem fazer build aqui
+# O código será montado via volume no docker-compose
+
+EXPOSE 3000
+
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Usar modo desenvolvimento com hot-reload
+CMD ["npm", "run", "dev"]
